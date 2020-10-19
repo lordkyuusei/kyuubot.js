@@ -9,6 +9,13 @@ client.once('ready', () => {
 
 const filter = (message_id) => message_id === config.roles.message_id;
 
+client.on('guildMemberAdd', member => {
+    const guest = '🍁Invité';
+    const role = member.guild.roles.cache.find(role => role.name === guest);
+    member.roles.add(role);
+    console.log(`Successfully added role ${role.name} to ${member.nickname || member.user.username}!`);
+});
+
 client.on('messageReactionAdd', async (reaction, user) => {
     const { id } = reaction.message;
     if (!filter(id)) return;

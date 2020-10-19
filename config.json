@@ -1,0 +1,32 @@
+{
+    "meta": {
+        "prefix": ":",
+        "token": "NzY3NjQ2MDM0MTA4NzQzNzAw.X408FA.UrRa0FkkcEDZrgHFOS1i9iINC4w"
+    },
+    "roles": {
+        "channel_id": "767665247225118770",
+        "message_id": "767665309342629919"
+    },
+    "reactionsToRoleMap": [
+        {
+            "emoji": "📱",
+            "role": "📱 Épris de High-Tech"
+        },
+        {
+            "emoji": "🐳",
+            "role": "🐳 Traverseurs d'Animaux"
+        },
+        {
+            "emoji": "🎮",
+            "role": "🎤🎮 Get Twitch'd"
+        },
+        {
+            "emoji": "🎦",
+            "role": "🎤🎦 Get S.E.K.T'd"
+        },
+        {
+            "emoji": "👥",
+            "role": "👥 Derrière toi."
+        }
+    ]
+}

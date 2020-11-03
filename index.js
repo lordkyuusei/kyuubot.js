@@ -1,6 +1,14 @@
 const Discord = require('discord.js');
 const config = require('./config.json');
 
+const argv = process.argv.slice(2);
+const command = argv[0];
+const token = argv[1];
+
+if (command === '--token') {
+    config.meta.token = token;
+}
+
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 client.once('ready', () => {})

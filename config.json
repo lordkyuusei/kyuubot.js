@@ -1,7 +1,7 @@
 {
     "meta": {
         "prefix": ":",
-        "token": "NzY3NjQ2MDM0MTA4NzQzNzAw.X408FA.UrRa0FkkcEDZrgHFOS1i9iINC4w"
+        "token": ""
     },
     "roles": {
         "channel_id": "767665247225118770",
@@ -27,6 +27,10 @@
         {
             "emoji": "👥",
             "role": "👥 Derrière toi."
+        },
+        {
+            "emoji": "🍁",
+            "role": "🍁Invité"
         }
     ]
 }

@@ -1,22 +1,8 @@
-const Discord = require('discord.js');
-const config = require('./config.json');
+const filter = (config, message_id) => message_id === config.roles.message_id;
 
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
-
-client.once('ready', () => {})
-
-const filter = (message_id) => message_id === config.roles.message_id;
-
-client.on('guildMemberAdd', member => {
-    const guest = '🍁Invité';
-    const role = member.guild.roles.cache.find(role => role.name === guest);
-    member.roles.add(role);
-    console.log(`Successfully added role ${role.name} to ${member.nickname || member.user.username}!`);
-});
-
-const prepare = async (reaction) => {
+const prepare = async (config, reaction) => {
     const { id } = reaction.message;
-    if (!filter(id)) return;
+    if (!filter(config, id)) return;
 
 	if (reaction.partial) {
 		try {
@@ -28,7 +14,8 @@ const prepare = async (reaction) => {
     }
 }
 
-const updateRole = (reaction, user, isAdd) => {
+const updateRole = (config, reaction, user, isAdd) => {
+    prepare(config, reaction);
     const pair = config.reactionsToRoleMap.find(pair => pair.emoji === reaction._emoji.name);
 
     if (pair) {
@@ -67,14 +54,4 @@ const updateRole = (reaction, user, isAdd) => {
     }
 }
 
-client.on('messageReactionAdd', (reaction, user) => {
-    prepare(reaction);
-    updateRole(reaction, user, true);
-});
-
-client.on('messageReactionRemove', (reaction, user) => {
-    prepare(reaction);
-    updateRole(reaction, user, false);
-});
-
-client.login(config.meta.token);
+export default updateRole;

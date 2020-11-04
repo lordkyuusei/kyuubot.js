@@ -1,7 +1,13 @@
 {
     "meta": {
-        "prefix": ":",
-        "token": "NzY3NjQ2MDM0MTA4NzQzNzAw.X408FA.UrRa0FkkcEDZrgHFOS1i9iINC4w"
+        "prefix": "!",
+        "token": "",
+        "commands": [
+            {
+                "name": "amb",
+                "args": ["amongus"]
+            }
+        ]
     },
     "roles": {
         "channel_id": "767665247225118770",
@@ -27,6 +33,10 @@
         {
             "emoji": "👥",
             "role": "👥 Derrière toi."
+        },
+        {
+            "emoji": "🍁",
+            "role": "🍁Invité"
         }
     ]
 }

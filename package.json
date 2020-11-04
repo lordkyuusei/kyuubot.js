@@ -8,10 +8,22 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "serve": "NODE_TLS_REJECT_UNAUTHORIZED='0' node index.js"
+    "transpile": "rm -rf dist && npx babel src --out-dir dist --presets=@babel/env",
+    "serve": "yarn transpile && node dist/index.js --token NzY3NjQ2MDM0MTA4NzQzNzAw.X408FA.UrRa0FkkcEDZrgHFOS1i9iINC4w",
+    "bye": "rm -rf ./dist ./node-modules ./yarn-error.log"
   },
   "dependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/runtime": "^7.12.1",
+    "@discordjs/opus": "^0.3.3",
     "discord.js": "^12.3.1",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^4.0.3"
   }
 }

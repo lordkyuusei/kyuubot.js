@@ -7,8 +7,7 @@ const playMusic = async (args, message) => {
     const voiceChannel = message.member.voice.channel;
     const command = message.content.split(' ');
     const theme = musicArguments.find(theme => Object.keys(theme)[0] === command[1]);
-    const songDetails = await (await ytdl.getBasicInfo(theme[command[1]])).videoDetails;
-    console.log(songDetails);
+    const songDetails = (await ytdl.getBasicInfo(theme[command[1]])).videoDetails;
     const song = {
         title: songDetails.title,
         url: songDetails.video_url
@@ -32,15 +31,14 @@ const playMusic = async (args, message) => {
         if (!queueConstruct.songs[0]) {
             voiceChannel.leave();
             queue.delete(message.guild.id);
-            return
+            return;
         }
         const dispatcher = serverQueue.connection
-            .play(ytdl(song.url))
-            .on("finish", () => {
-                serverQueue.songs.shift();
-            })
+            .play(ytdl('https://www.youtube.com/watch?v=55-ERhJEfaM'))
+            .on("debug", console.log)
+            .on("finish", () => serverQueue.songs.shift())
             .on("error", error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+        dispatcher.setVolume(queueConstruct.volume);
         serverQueue.textChannel.send(`Ye want'd me to start playing: **${song.title}**`);
     }
     catch(err) {

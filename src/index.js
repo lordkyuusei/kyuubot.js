@@ -5,14 +5,7 @@ import handleGuildJoin from "./components/guildArrivalComponent.js";
 import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
 
-const argv = process.argv.slice(2);
-const arg = argv[0];
-const token = argv[1];
-
-if (arg === '--token') {
-    config.meta.token = token;
-}
-
+config.meta.token = process.env.TOKEN;
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 const handleMessage = (config, message) => {

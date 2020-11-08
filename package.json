@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "build": "rm -rf dist && npx babel src --out-dir dist --presets=@babel/env",
-    "start": "node dist/index.js --token NzY3NjQ2MDM0MTA4NzQzNzAw.X408FA.UrRa0FkkcEDZrgHFOS1i9iINC4w",
+    "start": "node dist/index.js",
     "bye": "rm -rf ./dist ./node_modules ./yarn-error.log"
   },
   "dependencies": {

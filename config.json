@@ -13,6 +13,10 @@
         "channel_id": "767665247225118770",
         "message_id": "767665309342629919"
     },
+    "updates": {
+        "channel_id": "773081309303275531",
+        "channel_name": "🤖-kyuubotjs-update"
+    },
     "reactionsToRoleMap": [
         {
             "emoji": "📱",

@@ -1,9 +1,11 @@
 import Discord from "discord.js";
 import config from "../config.json";
+import { version } from "../package.json";
 
 import handleGuildJoin from "./components/guildArrivalComponent.js";
 import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
+import handleUpdates from "./components/updatesManagement.js";
 
 config.meta.token = process.env.TOKEN;
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -18,7 +20,7 @@ const handleMessage = (config, message) => {
     }
 }
 
-client.once('ready', () => {})
+client.once('ready', () => handleUpdates(client, config, version));
 
 client.on('guildMemberAdd', member => handleGuildJoin(config, member));
 client.on('messageReactionAdd', (reaction, user) => handleRoleReact(config, reaction, user, true));

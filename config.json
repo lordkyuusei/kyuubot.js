@@ -6,6 +6,14 @@
             {
                 "name": "amb",
                 "args": ["amongus"]
+            },
+            {
+                "name": "stop",
+                "args": []
+            },
+            {
+                "name": "survey",
+                "args": ["", "amongus"]
             }
         ]
     },

@@ -1,6 +1,15 @@
 import { MessageEmbed } from "discord.js";
 import messages from '../../store/messages.js';
 
+const myEmbeddedDiscord = (title, description, duration) => new MessageEmbed()
+    .setTitle(title)
+    .setDescription(description)
+    .setColor('#0099ff')
+    .setAuthor('The Kyuubot Surveys You!', messages.suc.KYUUBOT_LOGO, 'https://discord.js.org')
+    .setThumbnail(messages.suc.SEKT_LOGO)
+    .setTimestamp()
+    .setFooter(`by Lord Kyuusei • ends in ${duration} hours`, messages.suc.KYUUBOT_LOGO);
+
 const startSurveySafeguard = ({ args }, message) =>
     startsurveyChecks(message) === true ? startSurvey(args, message) : null;
 
@@ -17,8 +26,6 @@ const startsurveyChecks = (message) => {
     return true;
 }
 
-const filter = (reaction, user) => reactions.includes(reaction.emoji.name) && !user.bot;
-
 const startSurvey = (args, message) => {
     const [, ...question] = message.content.split(" ");
     const template = surveyArguments.find(arg => Object.keys(arg)[0] === question[0]);
@@ -30,24 +37,48 @@ const startSurvey = (args, message) => {
         survey.template
     );
 
-    const embedded = new MessageEmbed()
-        .setTitle("A NEW SURVEY APPEARS!")
-        .setDescription(description);
+    const filter = (react, user) => survey.reactions.some(em => em[react._emoji.name]) && !user.bot;
+
+    const embedded = myEmbeddedDiscord(survey.title, description, survey.duration / 3600);
     
     message.channel.send(embedded)
         .then(embeddedSurvey => {
-            console.log(survey.reactions);
             survey.reactions.map(reaction => embeddedSurvey.react(Object.keys(reaction)[0]));
-            const options = { time: survey.duration };
+            const options = { time: survey.duration * 1000 };
             return embeddedSurvey.awaitReactions(filter, options);
+        })
+        .then(embeddedResult => {
+            const collected = embeddedResult.array().map(react => react._emoji.name);
+            let reacted = [];
+
+            collected.forEach(react => {
+                reacted[react] = reacted[react] ? reacted[react] + 1 : 1
+            });
+
+            const description = collected.length !== 0 ?
+                collected.reduce((acc, react) =>
+                    `${acc}\n${react} ${survey.reactions.find(o => Object.keys(o)[0] === react)[react]} - ${reacted[react]} vote${reacted[react] > 1 ? '.s' : ''} ${reacted[react] >= 5 ? '✅' : '❌'}`,
+                "@Lord Kyuusei#3323 Days with vote >= 5 are counted as playable:") : 
+                "No one voted, or the survey got cancelled.";
+
+            const embedded = new MessageEmbed()
+                .setTitle(`RESULTS FOR ${survey.title} (${embeddedResult.array().length} votes):`)
+                .setDescription(description);
+
+            return message.channel.send(embedded);
+
         })
         .catch(err => console.error(err));
 }
 
+// 8h: 28800
+// 10min: 600
+// 30min: 1800
 const surveyArguments = [
     {
         "amongus": {
-            duration: 3600,
+            title: messages.suc.CNT_SURVEY_TITLE_1,
+            duration: 1800, // 30 min
             template: messages.suc.CNT_SURVEY_TYPE_1,
             reactions: [
                 { '1️⃣' : "M'nday" },
@@ -62,8 +93,9 @@ const surveyArguments = [
     },
     {
         "_": {
+            title: messages.suc.CNT_SURVEY_TITLE_0,
             duration: 600,
-            template: null,
+            template: messages.suc.CNT_SURVEY_TYPE_0,
             reactions: [
                 { '✅': "O.K. / Agreed" },
                 { '❌': "K.O. / Disagreed" }

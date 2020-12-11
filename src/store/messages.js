@@ -9,7 +9,12 @@ const errors = {
 };
 
 const successes = {
-    CNT_SURVEY_TYPE_1: "'tis time t' throw a new survey fer a week's worth o' traitors. Pick yer available days t' go out 'n slaughter on Among Us, crewmates."
+    SEKT_LOGO: "https://cdn.discordapp.com/attachments/760071268295770154/774645891197304872/unknown.png",
+    KYUUBOT_LOGO: "https://static.wikia.nocookie.net/pokemon-reborn/images/a/a7/VSShade.png",
+    CNT_SURVEY_TITLE_0: "A NEW SURVEY APPEARS!",
+    CNT_SURVEY_TYPE_0: null,
+    CNT_SURVEY_TITLE_1: "AMONG US Weekly Challenge - Agenda",
+    CNT_SURVEY_TYPE_1: "'tis time t' throw a new survey fer a week's worth o' traitors. Pick yer available days t' go out 'n slaughter on Among Us, crewmates.",
 };
 
 export default {

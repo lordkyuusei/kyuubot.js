@@ -48,24 +48,18 @@ const startSurvey = (args, message) => {
             return embeddedSurvey.awaitReactions(filter, options);
         })
         .then(embeddedResult => {
-            const collected = embeddedResult.array().map(react => react._emoji.name);
-            let reacted = [];
-
-            collected.forEach(react => {
-                reacted[react] = reacted[react] ? reacted[react] + 1 : 1
-            });
+            const collected = embeddedResult.array()
+                .map(react => ({ 'e': react._emoji.name, 'c': react.count - 1 }))
+                .sort((a, b) => a.count - b.count);
 
             const description = collected.length !== 0 ?
                 collected.reduce((acc, react) =>
-                    `${acc}\n${react} ${survey.reactions.find(o => Object.keys(o)[0] === react)[react]} - ${reacted[react]} vote${reacted[react] > 1 ? '.s' : ''} ${reacted[react] >= 5 ? '✅' : '❌'}`,
-                "@Lord Kyuusei#3323 Days with vote >= 5 are counted as playable:") : 
-                "No one voted, or the survey got cancelled.";
+                    `${acc}\n${react.e} ${survey.reactions.find(o => Object.keys(o)[0] === react.e)[react.e]} - ${react.c} vote${react.c > 1 ? '.s' : ''} ${react.c >= 5 ? '✅' : '❌'}`,
+                messages.suc.CNT_SURVEY_OUTPUT_0) : 
+                messages.err.ERR_SURVEY_OUTPUT_FAIL;
 
-            const embedded = new MessageEmbed()
-                .setTitle(`RESULTS FOR ${survey.title} (${embeddedResult.array().length} votes):`)
-                .setDescription(description);
-
-            return message.channel.send(embedded);
+            const embedded = myEmbeddedDiscord(`RESULTS FOR ${survey.title} (${collected.length} choices):`, description);
+            //return message.channel.send(embedded);
 
         })
         .catch(err => console.error(err));

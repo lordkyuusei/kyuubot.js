@@ -8,7 +8,7 @@ const myEmbeddedDiscord = (title, description, duration) => new MessageEmbed()
     .setAuthor('The Kyuubot Surveys You!', messages.suc.KYUUBOT_LOGO, 'https://discord.js.org')
     .setThumbnail(messages.suc.SEKT_LOGO)
     .setTimestamp()
-    .setFooter(`by Lord Kyuusei • ends in ${duration} hours`, messages.suc.KYUUBOT_LOGO);
+    .setFooter(`by Lord Kyuusei • ends in ${duration >= 3600 ? `${duration / 3600} hours` : `${duration / 60} minutes`}`, messages.suc.KYUUBOT_LOGO);
 
 const startSurveySafeguard = ({ args }, message) =>
     startsurveyChecks(message) === true ? startSurvey(args, message) : null;
@@ -39,7 +39,7 @@ const startSurvey = (args, message) => {
 
     const filter = (react, user) => survey.reactions.some(em => em[react._emoji.name]) && !user.bot;
 
-    const embedded = myEmbeddedDiscord(survey.title, description, survey.duration / 3600);
+    const embedded = myEmbeddedDiscord(survey.title, description, survey.duration);
     
     message.channel.send(embedded)
         .then(embeddedSurvey => {
@@ -59,7 +59,7 @@ const startSurvey = (args, message) => {
                 messages.err.ERR_SURVEY_OUTPUT_FAIL;
 
             const embedded = myEmbeddedDiscord(`RESULTS FOR ${survey.title} (${collected.length} choices):`, description);
-            //return message.channel.send(embedded);
+            return message.channel.send(embedded);
 
         })
         .catch(err => console.error(err));
@@ -72,7 +72,7 @@ const surveyArguments = [
     {
         "amongus": {
             title: messages.suc.CNT_SURVEY_TITLE_1,
-            duration: 1800, // 30 min
+            duration: 28800, // 30 min
             template: messages.suc.CNT_SURVEY_TYPE_1,
             reactions: [
                 { '1️⃣' : "M'nday" },
@@ -92,7 +92,8 @@ const surveyArguments = [
             template: messages.suc.CNT_SURVEY_TYPE_0,
             reactions: [
                 { '✅': "O.K. / Agreed" },
-                { '❌': "K.O. / Disagreed" }
+                { '❌': "K.O. / Disagreed" },
+                { '🔷': "???. / No opinion" }
             ]
         }        
     },

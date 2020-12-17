@@ -52,9 +52,11 @@ const startSurvey = (args, message) => {
                 .map(react => ({ 'e': react._emoji.name, 'c': react.count - 1 }))
                 .sort((a, b) => a.count - b.count);
 
+            const validateIfAmongUs = count => survey.title === messages.suc.CNT_SURVEY_TITLE_1 ? (count >= 5 ? '✅' : '❌') : '';
+
             const description = collected.length !== 0 ?
                 collected.reduce((acc, react) =>
-                    `${acc}\n${react.e} ${survey.reactions.find(o => Object.keys(o)[0] === react.e)[react.e]} - ${react.c} vote${react.c > 1 ? '.s' : ''} ${react.c >= 5 ? '✅' : '❌'}`,
+                    `${acc}\n${react.e} ${survey.reactions.find(o => Object.keys(o)[0] === react.e)[react.e]} - ${react.c} vote${react.c > 1 ? '.s' : ''} ${validateIfAmongUs(react.c)}`,
                 messages.suc.CNT_SURVEY_OUTPUT_0) : 
                 messages.err.ERR_SURVEY_OUTPUT_FAIL;
 

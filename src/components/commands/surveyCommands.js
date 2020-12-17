@@ -50,7 +50,7 @@ const startSurvey = (args, message) => {
         .then(embeddedResult => {
             const collected = embeddedResult.array()
                 .map(react => ({ 'e': react._emoji.name, 'c': react.count - 1 }))
-                .sort((a, b) => a.count - b.count);
+                .sort((a, b) => b.count - a.count);
 
             const validateIfAmongUs = count => survey.title === messages.suc.CNT_SURVEY_TITLE_1 ? (count >= 5 ? '✅' : '❌') : '';
 

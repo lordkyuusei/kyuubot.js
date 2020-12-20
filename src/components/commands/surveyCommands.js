@@ -74,7 +74,7 @@ const surveyArguments = [
     {
         "amongus": {
             title: messages.suc.CNT_SURVEY_TITLE_1,
-            duration: 28800, // 30 min
+            duration: 28800, // 8h
             template: messages.suc.CNT_SURVEY_TYPE_1,
             reactions: [
                 { '1️⃣' : "M'nday" },

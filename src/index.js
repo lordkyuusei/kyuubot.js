@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import Express from "express";
+const express = require("express")
 
 import config from "../config.json";
 import { version } from "../package.json";
@@ -12,11 +12,20 @@ import handleUpdates from "./components/updatesManagement.js";
 config.meta.token = process.env.TOKEN;
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
-const web = new Express();
+const app = express()
 
-web.use(Express.static("public"));
-web.get("/", (req, res) => res.send("<h1>Nope.</h1>"));
-web.listen(process.env.PORT || 3000, () => console.log("Running."));
+// use the express-static middleware
+// app.use(express.static("public"))
+
+// define the first route
+app.get("/", function (req, res) {
+  res.send("<h1>Hello World!</h1>")
+})
+
+// start the server listening for requests
+app.listen(process.env.PORT || 3000, 
+	() => console.log("Server is running..."));
+
 
 const handleMessage = (config, message) => {
     const { prefix, commands } = config.meta;

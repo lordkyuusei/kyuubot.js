@@ -1,4 +1,6 @@
 import Discord from "discord.js";
+import Express from "express";
+
 import config from "../config.json";
 import { version } from "../package.json";
 
@@ -8,7 +10,12 @@ import handleRoleReact from "./components/roleManagementComponent.js";
 import handleUpdates from "./components/updatesManagement.js";
 
 config.meta.token = process.env.TOKEN;
+
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const web = new Express();
+
+web.use(Express.static("public"));
+web.get("/", (req, res) => res.send("<h1>Nope.</h1>"));
 
 const handleMessage = (config, message) => {
     const { prefix, commands } = config.meta;

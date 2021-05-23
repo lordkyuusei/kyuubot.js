@@ -16,6 +16,7 @@ const web = new Express();
 
 web.use(Express.static("public"));
 web.get("/", (req, res) => res.send("<h1>Nope.</h1>"));
+web.listen(process.env.PORT || 3000, () => console.log("Running."));
 
 const handleMessage = (config, message) => {
     const { prefix, commands } = config.meta;

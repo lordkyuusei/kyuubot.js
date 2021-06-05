@@ -20,7 +20,7 @@ export const validationComponent = ({ secret }) => {
         const id = req.headers["twitch-eventsub-message-id"];
         const ts = req.headers["twitch-eventsub-message-timestamp"];
         const sn = req.headers["twitch-eventsub-message-signature"];
-        const bd = req.json({ requestBody: req.body });
+        const bd = res.json({ requestBody: req.body });
 
         const hmac = await hmacSign(secret, `${id}${ts}${bd}`);
         const challenge = `sha256=${hmac.toString(16)}`;

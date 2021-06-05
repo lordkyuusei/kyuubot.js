@@ -17,7 +17,6 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
 export const validationComponent = ({ secret }) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = async (req, res) => {
-        console.log(req);
         const id = req.headers["twitch-eventsub-message-id"];
         const ts = req.headers["twitch-eventsub-message-timestamp"];
         const sn = req.headers["twitch-eventsub-message-signature"];

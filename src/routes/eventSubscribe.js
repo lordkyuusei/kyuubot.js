@@ -27,6 +27,7 @@ export const validationComponent = (secret) => {
 
         if (sn !== challenge) {
             console.log("EUH LA !!!");
+            console.log(hmac, challenge);
         } else {
             console.log("omg c passé");
         }

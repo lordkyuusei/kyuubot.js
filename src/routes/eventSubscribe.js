@@ -6,7 +6,7 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
     const authorizationCallback = async (req, res) => {
         const { accessToken } = req.query;
         const response = await subscribeEvent(id, accessToken, "stream.online", eventCallback, secret);
-        res.send(`please check: ${response.data[0].id}`);
+        res.send(`waiting...`);
     }
     return [authorizationRoute, authorizationCallback];
 }
@@ -25,12 +25,11 @@ export const validationComponent = ({ clientId, secret }) => {
             const hmac256 = `sha256=${hmac.toString(16)}`;
     
             if (sn !== hmac256) {
-                console.log("EUH LA !!!");
                 return;
             } else {
-                console.log("omg c passé");
                 const { challenge } = req.body;
                 const { accessToken } = getStore();
+                console.log(accessToken);
                 activeEvent(challenge, clientId, accessToken);
             }
         } else {

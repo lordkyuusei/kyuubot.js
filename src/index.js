@@ -9,6 +9,8 @@ import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
 import handleUpdates from "./components/updatesManagement.js";
 
+import authorizationComponent from "./routes/authorization";
+
 config.meta.token = process.env.TOKEN;
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -21,6 +23,9 @@ const app = express()
 app.get("/", function (req, res) {
   res.send("<h1>Hello World!</h1>")
 })
+
+const [authorizationRoute, authorizationCallback] = authorizationComponent;
+app.get(authorizationRoute, authorizationCallback);
 
 // start the server listening for requests
 app.listen(process.env.PORT || 3000, 

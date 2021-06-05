@@ -1,40 +1,59 @@
 import Discord from "discord.js";
-const express = require("express")
-
-import config from "../config.json";
-import { version } from "../package.json";
+import express from "express";
+import fs from "fs";
+import http from "http";
+import https from "https";
 
 import handleGuildJoin from "./components/guildArrivalComponent.js";
 import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
 import handleUpdates from "./components/updatesManagement.js";
 
-import authorizationComponent from "./routes/authorization";
+import { authorizationComponent, validationComponent} from "./routes/eventSubscribe";
 import oauthenticationComponent from './routes/oauthentication';
 
-import bodies from "./store/authorizations";
-
-config.meta.token = process.env.TOKEN;
-config.twitch.twitchId = process.env.TWITCH_ID;
-config.twitch.twitchSt = process.env.TWITCH_SECRET;
-config.twitch.twitchRu = process.env.TWITCH_REDIRECT;
-config.twitch.twitchSc = process.env.TWITCH_SCOPE;
+import config from "../config.json";
+import { version } from "../package.json";
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const app = express()
 
-app.get("/", function (req, res) {
-  res.send("<h1>Hello World!</h1>")
-})
+config.meta.token = process.env.TOKEN;
+config.twitch.id = process.env.TWITCH_ID;
+config.twitch.secret = process.env.TWITCH_SECRET;
+config.twitch.redirectUri = process.env.TWITCH_REDIRECT;
+config.twitch.scope = process.env.TWITCH_SCOPE;
+config.twitch.eventCallback = process.env.TWITCH_EVENT_CB;
 
-const [authorizationRoute, authorizationCallback] = authorizationComponent(bodies.onair, config.twitch.twitchId);
-app.get(authorizationRoute, authorizationCallback);
-
+const [authorizationRoute, authorizationCallback] = authorizationComponent(config.twitch);
+const [validationRoute, validationCallback] = validationComponent(config.twitch);
 const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent(config.twitch)
+
+app.get("/", (req, res) => {
+  const { accessToken } = req.query;
+  if (accessToken)
+    res.send(`<h1>${accessToken}</h1><a href='/api/twitch/eventSubscribe?accessToken=${accessToken}'>event sub</a>`)
+  res.send("<div><a href='/api/twitch/oauth'>oauth</a></div>");
+});
+
+app.get(authorizationRoute, authorizationCallback);
+app.get(validationRoute, validationCallback);
 app.get(oauthenticationRoute, oauthenticationCallback);
 
-app.listen(process.env.PORT || 3000, 
-	() => console.log("Server is running..."));
+if (process.env.NODE_ENV !== 'production') {
+  const key = fs.readFileSync("./certs/server.key", "utf-8");
+  const cert = fs.readFileSync("./certs/server.crt", "utf-8");
+
+  const credentials = { key, cert };
+  const httpServer = http.createServer(app);
+  const httpsServer = https.createServer(credentials, app);
+
+  httpServer.listen(3000);
+  httpsServer.listen(8443);
+} else {
+  app.listen(process.env.PORT || 3000, 
+    () => console.log("Server is running..."));
+}
 
 const handleMessage = (config, message) => {
     const { prefix, commands } = config.meta;

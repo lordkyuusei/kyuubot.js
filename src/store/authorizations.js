@@ -1,13 +1,13 @@
 const onair = {
-    "type": "stream.live",
+    "type": "",
     "version": "1",
     "condition": {
-        "broadcaster_user_id": "12826"
+        "broadcaster_user_id": "149976943"
     },
     "transport": {
         "method": "webhook",
-        "callback": "https://thekyuubot.herokuapp.com/api/twitch/validate",
-        "secret": "s3cRe7"
+        "callback": "",
+        "secret": ""
     }
 }
 

@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 const hmacSign = async (key, message) => {
     const g = (str) => new Uint8Array([...unescape(encodeURIComponent(str))].map(c => c.charCodeAt(0)));
     const k = g(key);

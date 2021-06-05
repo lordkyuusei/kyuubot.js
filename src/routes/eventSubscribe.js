@@ -21,20 +21,27 @@ export const validationComponent = ({ secret }) => {
         const id = req.headers["twitch-eventsub-message-id"];
         const ts = req.headers["twitch-eventsub-message-timestamp"];
         const sn = req.headers["twitch-eventsub-message-signature"];
-        const bd = res.json({ requestBody: req.body });
+        const bd1 = res.json({ requestBody: req.body });
+        const bd2 = req.body;
+        const bd3 = JSON.stringify(req.body);
 
-        console.log(bd);
-        console.log(req.body);
-        console.log(JSON.stringify(req.body));
+        console.log(bd1);
+        console.log(bd2);
+        console.log(bd3);
 
-        const hmac = hmacSign(secret, `${id}${ts}${bd}`);
-        const challenge = `sha256=${hmac.toString(16)}`;
+        const hmac1 = hmacSign(secret, `${id}${ts}${bd1}`);
+        const hmac2 = hmacSign(secret, `${id}${ts}${bd2}`);
+        const hmac3 = hmacSign(secret, `${id}${ts}${bd3}`);
+        const challenge1 = `sha256=${hmac1.toString(16)}`;
+        const challenge2 = `sha256=${hmac2.toString(16)}`;
+        const challenge3 = `sha256=${hmac3.toString(16)}`;
 
-        console.log("EUH LA !!!");
-        if (sn !== challenge) {
-            console.log(`adding ${id}, ${ts}, and ${bd} together.`)
-            console.log(challenge);
-            console.log(sn);
+        console.log(challenge1);
+        console.log(challenge2);
+        console.log(challenge3);
+        console.log(sn);
+        if (sn !== challenge1 || sn !== challenge2 || sn !== challenge3) {
+            console.log("EUH LA !!!");
         } else {
             console.log("omg c passé");
         }

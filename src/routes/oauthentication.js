@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 const oauthenticationComponent = (twitch) => {
     const oauthenticationRoute = "/api/twitch/oauth";
     const twitchOauth = `https://id.twitch.tv/oauth2/authorize?client_id=${twitch.twitchId}&redirect_uri=${twitch.twitchRu}&response_type=code&scope=${twitch.twitchSc}`;

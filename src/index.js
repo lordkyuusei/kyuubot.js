@@ -31,9 +31,8 @@ const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent
 
 app.get("/", (req, res) => {
   const { accessToken } = req.query;
-  if (accessToken)
-    res.send(`<h1>${accessToken}</h1><a href='/api/twitch/eventSubscribe?accessToken=${accessToken}'>event sub</a>`)
-  res.send("<div><a href='/api/twitch/oauth'>oauth</a></div>");
+  const display = accessToken ? `<h1>${accessToken}</h1><a href='/api/twitch/eventSubscribe?accessToken=${accessToken}'>event sub</a>` : "<div><a href='/api/twitch/oauth'>oauth</a></div>";
+  res.send(display);
 });
 
 app.get(authorizationRoute, authorizationCallback);

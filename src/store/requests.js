@@ -54,7 +54,7 @@ export const activeEvent = async (challenge, clientId, accessToken) => {
     const headers = {
         "Client-ID": clientId,
         "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "application/text"
+        "Content-Type": "application/json"
     };
     const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(challenge)});
     return response.json();

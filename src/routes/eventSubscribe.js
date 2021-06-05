@@ -16,18 +16,18 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
 
 export const validationComponent = ({ secret }) => {
     const validationRoute = "/api/twitch/event";
-    const validationCallback = async (req, res) => {
-        const id = req.headers["twitch-eventsub-message-id"];
-        const ts = req.headers["twitch-eventsub-message-timestamp"];
-        const sn = req.headers["twitch-eventsub-message-signature"];
+    const validationCallback = (req, res) => {
+        const id = req.rawHeaders["Twitch-Eventsub-Message-Id"];
+        const ts = req.rawHeaders["Twitch-Eventsub-Message-Timestamp"];
+        const sn = req.rawHeaders["Twitch-Eventsub-Message-Signature"];
         const bd = res.json({ requestBody: req.body });
 
-        const hmac = await hmacSign(secret, `${id}${ts}${bd}`);
+        const hmac = hmacSign(secret, `${id}${ts}${bd}`);
         const challenge = `sha256=${hmac.toString(16)}`;
 
+        console.log("EUH LA !!!");
         if (sn !== challenge) {
-            console.log("EUH LA !!!");
-            console.log(sn);
+            console.log(`adding ${id}, ${ts}, and ${bd} together.`)
             console.log(challenge);
         } else {
             console.log("omg c passé");

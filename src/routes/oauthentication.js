@@ -10,7 +10,7 @@ const oauthenticationComponent = (twitch) => {
         else if (accessToken === undefined) {
             const url = `https://id.twitch.tv/oauth2/token?client_id=${twitch.twitchId}&client_secret=${twitch.twitchSt}&code=${code}&grant_type=authorization_code&redirect_uri=${twitch.twitchRu}`;
             fetch(url, { method: "POST"})
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(twitch => {
                     console.log(twitch);
                     res.send(`token: ${twitch.access_token} (use ${twitch.refresh_token} to get new). expires in ${twitch.expires_in}s`);

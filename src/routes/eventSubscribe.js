@@ -14,7 +14,7 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
 export const validationComponent = () => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = (req, res) => {
-        console.log(req);
+        console.log("ah ok");
         res.send("<h1>ok</h1>");
     }
     return [validationRoute, validationCallback];

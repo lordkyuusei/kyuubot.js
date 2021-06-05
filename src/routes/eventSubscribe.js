@@ -23,6 +23,10 @@ export const validationComponent = ({ secret }) => {
         const sn = req.headers["twitch-eventsub-message-signature"];
         const bd = res.json({ requestBody: req.body });
 
+        console.log(bd);
+        console.log(req.body);
+        console.log(JSON.stringify(req.body));
+
         const hmac = hmacSign(secret, `${id}${ts}${bd}`);
         const challenge = `sha256=${hmac.toString(16)}`;
 
@@ -30,6 +34,7 @@ export const validationComponent = ({ secret }) => {
         if (sn !== challenge) {
             console.log(`adding ${id}, ${ts}, and ${bd} together.`)
             console.log(challenge);
+            console.log(sn);
         } else {
             console.log("omg c passé");
         }

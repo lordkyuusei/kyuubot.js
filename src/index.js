@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 });
 
 app.get(authorizationRoute, authorizationCallback);
-app.get(validationRoute, validationCallback);
+app.post(validationRoute, validationCallback);
 app.get(oauthenticationRoute, oauthenticationCallback);
 
 if (process.env.NODE_ENV !== 'production') {

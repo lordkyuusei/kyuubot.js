@@ -11,7 +11,7 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
     return [authorizationRoute, authorizationCallback];
 }
 
-export const validationComponent = ({ clientId, secret }) => {
+export const validationComponent = ({ clientId, secret }, handleLive, { channels }, { channel_id}) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = async (req, res) => {
         const { subscription, event, challenge } = req.body;
@@ -31,7 +31,8 @@ export const validationComponent = ({ clientId, secret }) => {
                 res.status(200).send(challenge);
             }
         } else {
-            console.log(req.body);
+            handleLive(channels, channel_id, req.body);
+            res.status(200).send("ok");
         }
     }
     return [validationRoute, validationCallback];

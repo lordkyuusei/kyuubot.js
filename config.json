@@ -34,6 +34,10 @@
         "channel_id": "773081309303275531",
         "channel_name": "🤖-kyuubotjs-update"
     },
+    "onair": {
+        "channel_id": "701459463974027274",
+        "channel_name": "🎙live-live-live"
+    },
     "reactionsToRoleMap": [
         {
             "emoji": "📱",

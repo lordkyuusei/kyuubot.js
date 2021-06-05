@@ -8,6 +8,7 @@ import handleGuildJoin from "./components/guildArrivalComponent.js";
 import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
 import handleUpdates from "./components/updatesManagement.js";
+import handleLive from "./components/streamOnlineManagement.js";
 
 import { authorizationComponent, validationComponent} from "./routes/eventSubscribe";
 import oauthenticationComponent from './routes/oauthentication';
@@ -28,7 +29,7 @@ config.twitch.scope = process.env.TWITCH_SCOPE;
 config.twitch.eventCallback = process.env.TWITCH_EVENT_CB;
 
 const [authorizationRoute, authorizationCallback] = authorizationComponent(config.twitch);
-const [validationRoute, validationCallback] = validationComponent(config.twitch);
+const [validationRoute, validationCallback] = validationComponent(config.twitch, handleLive, client, config.onair);
 const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent(config.twitch)
 
 app.get("/", (req, res) => {
@@ -52,8 +53,7 @@ if (process.env.NODE_ENV !== 'production') {
   httpServer.listen(3000);
   httpsServer.listen(8443);
 } else {
-  app.listen(process.env.PORT || 3000, 
-    () => console.log("Server is running..."));
+  app.listen(process.env.PORT || 3000, () => console.log("Server is running..."));
 }
 
 const handleMessage = (config, message) => {

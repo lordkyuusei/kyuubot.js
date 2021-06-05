@@ -31,6 +31,7 @@ export const validationComponent = ({ clientId, secret }, handleLive, { channels
                 res.status(200).send(challenge);
             }
         } else {
+            console.log(req.body);
             handleLive(channels, channel_id, req.body);
             res.status(200).send("ok");
         }

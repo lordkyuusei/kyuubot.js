@@ -15,7 +15,7 @@ export const validationComponent = ({ clientId, secret }) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = (req, res) => {
         const { subscription, event, challenge } = req.body;
-        if (challenge && (subscription === undefined && event === undefined)) {
+        if (challenge && event === undefined) {
             const id = req.headers["twitch-eventsub-message-id"];
             const ts = req.headers["twitch-eventsub-message-timestamp"];
             const sn = req.headers["twitch-eventsub-message-signature"];
@@ -34,7 +34,7 @@ export const validationComponent = ({ clientId, secret }) => {
                 activeEvent(challenge, clientId, accessToken);
             }
         } else {
-            console.log(event);
+            console.log(req.body);
         }
     }
     return [validationRoute, validationCallback];

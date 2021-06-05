@@ -3,9 +3,9 @@ const oauthenticationComponent = (twitch) => {
     const twitchOauth = `https://id.twitch.tv/oauth2/authorize?client_id=${twitch.twitchId}&redirect_uri=${twitch.twitchRu}&response_type=code&scope=${twitch.twitchSc}`;
     const oauthenticationCallback = (req, res) => {
         const { code, accessToken, scope } = req.query;
-        if (code === null && accessToken === null)
+        if (code === undefined && accessToken === undefined)
             res.send(`<a href="${twitchOauth}">Connect to Twitch</a>`)            
-        else if (accessToken === null) {
+        else if (accessToken === undefined) {
             const url = `https://id.twitch.tv/oauth2/token?client_id=${twitch.twitchId}&client_secret=${twitch.St}&code=${code}&grant_type=authorization_code&redirect_uri=${twitch.twitchRu}`;
             fetch(url, { method: "POST"}).then(response => {
                 console.log(response);

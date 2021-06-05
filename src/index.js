@@ -10,27 +10,31 @@ import handleRoleReact from "./components/roleManagementComponent.js";
 import handleUpdates from "./components/updatesManagement.js";
 
 import authorizationComponent from "./routes/authorization";
+import oauthenticationComponent from './routes/oauthentication';
+
+import bodies from "./store/authorizations";
 
 config.meta.token = process.env.TOKEN;
+config.twitch.twitchId = process.env.TWITCH_ID;
+config.twitch.twitchSt = process.env.TWITCH_SECRET;
+config.twitch.twitchRu = process.env.TWITCH_REDIRECT;
+config.twitch.twitchSc = process.env.TWITCH_SCOPE;
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const app = express()
 
-// use the express-static middleware
-// app.use(express.static("public"))
-
-// define the first route
 app.get("/", function (req, res) {
   res.send("<h1>Hello World!</h1>")
 })
 
-const [authorizationRoute, authorizationCallback] = authorizationComponent;
+const [authorizationRoute, authorizationCallback] = authorizationComponent(bodies.onair, config.twitch.twitchId);
 app.get(authorizationRoute, authorizationCallback);
 
-// start the server listening for requests
+const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent(config.twitch)
+app.get(oauthenticationRoute, oauthenticationCallback);
+
 app.listen(process.env.PORT || 3000, 
 	() => console.log("Server is running..."));
-
 
 const handleMessage = (config, message) => {
     const { prefix, commands } = config.meta;
@@ -43,7 +47,6 @@ const handleMessage = (config, message) => {
 }
 
 client.once('ready', () => handleUpdates(client, config, version));
-
 client.on('guildMemberAdd', member => handleGuildJoin(config, member));
 client.on('messageReactionAdd', (reaction, user) => handleRoleReact(config, reaction, user, true));
 client.on('messageReactionRemove', (reaction, user) => handleRoleReact(config, reaction, user, false));

@@ -1,4 +1,10 @@
 {
+    "twitch": {
+        "twitchId": "",
+        "twitchSt": "",
+        "twitchRu": "",
+        "twitchSc": ""
+    },
     "meta": {
         "prefix": "!",
         "token": "",

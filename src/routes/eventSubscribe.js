@@ -6,7 +6,7 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
     const authorizationCallback = async (req, res) => {
         const { accessToken } = req.query;
         const response = await subscribeEvent(id, accessToken, "stream.online", eventCallback, secret);
-        console.log(response);
+        res.send(response);
     }
     return [authorizationRoute, authorizationCallback];
 }

@@ -6,14 +6,14 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
     const authorizationCallback = async (req, res) => {
         const { accessToken } = req.query;
         const response = await subscribeEvent(id, accessToken, "stream.online", eventCallback, secret);
-        res.send(`waiting...`);
+        console.log(response);
     }
     return [authorizationRoute, authorizationCallback];
 }
 
 export const validationComponent = ({ clientId, secret }) => {
     const validationRoute = "/api/twitch/event";
-    const validationCallback = (req, res) => {
+    const validationCallback = async (req, res) => {
         const { subscription, event, challenge } = req.body;
         if (challenge && event === undefined) {
             const id = req.headers["twitch-eventsub-message-id"];
@@ -29,8 +29,10 @@ export const validationComponent = ({ clientId, secret }) => {
             } else {
                 const { challenge } = req.body;
                 const { accessToken } = getStore();
-                console.log(accessToken);
-                activeEvent(challenge, clientId, accessToken);
+                const response = await activeEvent(challenge, clientId, accessToken);
+                console.log(response);
+                res.send(response);
+                return accessToken;
             }
         } else {
             console.log(req.body);

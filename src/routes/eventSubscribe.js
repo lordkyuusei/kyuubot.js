@@ -16,6 +16,7 @@ export const validationComponent = ({ clientId, secret }, handleLive, { channels
     const validationCallback = async (req, res) => {
         const { subscription, event, challenge } = req.body;
         if (challenge && event === undefined) {
+            console.log(req.body);
             const id = req.headers["twitch-eventsub-message-id"];
             const ts = req.headers["twitch-eventsub-message-timestamp"];
             const sn = req.headers["twitch-eventsub-message-signature"];

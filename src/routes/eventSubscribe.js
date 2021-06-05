@@ -14,7 +14,7 @@ export const authorizationComponent = ({ id, eventCallback, secret}) => {
     return [authorizationRoute, authorizationCallback];
 }
 
-export const validationComponent = (secret) => {
+export const validationComponent = ({ secret }) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = async (req, res) => {
         console.log(req);

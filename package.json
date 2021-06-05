@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rm -rf dist && npx babel src --out-dir dist --presets=@babel/preset-env",
     "start": "node dist/index.js",
-    "serve": "yarn build && TOKEN=NzY3NjQ2MDM0MTA4NzQzNzAw.X408FA.-LQEAL9Y0ajXEbtyCh-geV5K730 TWITCH_ID=gl5jftd0in5ifc0zrjd13l5saixsa5 TWITCH_REDIRECT=https://thekyuubot.herokuapp.com/api/twitch/oauth TWITCH_SCOPE=channel:manage:broadcast yarn start",
+    "serve": "yarn build && TOKEN= TWITCH_ID=gl5jftd0in5ifc0zrjd13l5saixsa5 TWITCH_REDIRECT=https://thekyuubot.herokuapp.com/api/twitch/oauth TWITCH_SCOPE=channel:manage:broadcast yarn start",
     "bye": "rm -rf ./dist ./node_modules ./yarn-error.log"
   },
   "dependencies": {

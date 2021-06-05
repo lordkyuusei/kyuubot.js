@@ -16,7 +16,9 @@ import config from "../config.json";
 import { version } from "../package.json";
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
-const app = express()
+
+const app = express();
+app.use(express.json());
 
 config.meta.token = process.env.TOKEN;
 config.twitch.id = process.env.TWITCH_ID;

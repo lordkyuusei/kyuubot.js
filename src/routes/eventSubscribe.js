@@ -21,13 +21,14 @@ export const validationComponent = ({ secret }) => {
         const id = req.rawHeaders["Twitch-Eventsub-Message-Id"];
         const ts = req.rawHeaders["Twitch-Eventsub-Message-Timestamp"];
         const sn = req.rawHeaders["Twitch-Eventsub-Message-Signature"];
+        const bd = req.json({ requestBody: req.body });
 
-        const hmac = await hmacSign(secret, `${id}${ts}${req.body || ''}`);
+        const hmac = await hmacSign(secret, `${id}${ts}${bd}`);
         const challenge = `sha256=${hmac.toString(16)}`;
 
         if (sn !== challenge) {
             console.log("EUH LA !!!");
-            console.log(hmac, challenge);
+            console.log(sn, challenge);
         } else {
             console.log("omg c passé");
         }

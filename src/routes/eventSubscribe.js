@@ -28,11 +28,7 @@ export const validationComponent = ({ clientId, secret }) => {
                 return;
             } else {
                 const { challenge } = req.body;
-                const { accessToken } = getStore();
-                const response = await activeEvent(challenge, clientId, accessToken);
-                console.log(response);
-                res.send(response);
-                return accessToken;
+                res.status(200).send(challenge);
             }
         } else {
             console.log(req.body);

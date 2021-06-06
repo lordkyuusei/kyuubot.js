@@ -3,8 +3,12 @@ import bodies from "./authorizations";
 
 const baseUrl = "https://id.twitch.tv/";
 const eventUrl = "https://api.twitch.tv/helix/eventsub/subscriptions";
+const helixUrl = "https://api.twitch.tv/helix/";
 
 const store = {
+    clientId: "",
+    clientSecret: "",
+    clientScope: "",
     accessToken: "",
     refreshToken: "",
 };
@@ -22,19 +26,22 @@ export const getAccessToken = async (clientId, clientSecret, code, clientRedirec
     return await response.json();
 }
 
-export const getAppToken = async (clientId, clientSecret, clientScope) => {
+export const getAppToken = async () => {
+    const { clientId, clientSecret, clientScope } = getStore();
     const url = `${baseUrl}oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials&scope=${clientScope}`;
     const response = await fetch(url, { method: "POST" });
     return await response.json();
 }
 
-export const refreshAccessToken = async (clientId, clientSecret, refreshToken) => {
+export const refreshAppToken = async () => {
+    const { clientId, clientSecret, refreshToken } = getStore();
     const url = `${baseUrl}oauth2/token?grant_type=refresh_token&refresh_token=${refreshToken}&client_id=${clientId}&client_secret=${clientSecret}`;
     const response = await fetch(url, { method: "POST" });
     return await response.json();
 }
 
-export const subscribeEvent = async (clientId, accessToken, eventType, callback, secret) => {
+export const subscribeEvent = async (eventType, callback) => {
+    const { clientId, clientSecret, accessToken } = getStore();
     const url = eventUrl;
     const headers = {
         "Client-ID": clientId,
@@ -44,28 +51,53 @@ export const subscribeEvent = async (clientId, accessToken, eventType, callback,
     const body = bodies.onair;
     body.type = eventType;
     body.transport.callback = callback;
-    body.transport.secret = secret;
-    const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
+    body.transport.secret = clientSecret;
+    const response = await myFetch(url, "POST", headers, JSON.stringify(body));
     return await response.json();
 }
 
-export const activeEvent = async (challenge, clientId, accessToken) => {
+export const activeEvent = async (challenge) => {
+    const { clientId, accessToken } = getStore();
     const url = eventUrl;
     const headers = {
         "Client-ID": clientId,
         "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json"
     };
-    const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(challenge)});
+    const response = await await myFetch(url, "POST", headers, JSON.stringify(challenge));
     return response.json();
 }
 
-export const getEventsList = async (clientId, accessToken) => {
+export const getEventsList = async () => {
+    const { clientId, accessToken } = getStore();
     const url = eventUrl;
     const headers = {
         "Client-ID": clientId,
         "Authorization": `Bearer ${accessToken}`,
     };
-    const response = await fetch(url, { method: "GET", headers });
+    const response = await myFetch(url, "GET", headers);
     return response.json();
+}
+
+export const getChannelData = async (broadcaster_id) => {
+    const { clientId, accessToken } = getStore();
+    const url = `${helixUrl}channels?broadcaster_id=${broadcaster_id}`;
+    const headers = {
+        "Client-ID": clientId,
+        "Authorization": `Bearer ${accessToken}`
+    };
+    const response = await myFetch(url, "GET", headers);
+    return response.json();
+}
+
+export const myFetch = async (url, method, headers, body) => {
+    let response = await fetch(url, { method, headers, body });
+    if ([400, 401, 402, 403].includes(response.status)) {
+        const { access_token, refresh_token } = await refreshAppToken();
+        setStore("accessToken", access_token);
+        setStore("refreshToken", refresh_token);
+        headers["Authorization"] = `Bearer ${access_token}`;
+        response = await fetch(url, { method, headers, body});
+    }
+    return response;
 }

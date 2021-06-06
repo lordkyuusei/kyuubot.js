@@ -1,9 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import messages from '../store/messages.js';
 
-const handleLive = (channels, channel, body) => {
-    console.log(body);
-
+const handleLive = (channels, channel, { data }) => {
     const liveChannel = channels.cache.get(channel);
     const streamOnlineEmbed = new MessageEmbed()
         .setColor('#EA2370')
@@ -13,8 +11,8 @@ const handleLive = (channels, channel, body) => {
         .setDescription("Check out https://twitch.tv/lkyuusei now!")
         .setThumbnail(messages.suc.SEKT_LOGO)
         .addFields(
-            { name: "Now playing", value: "Ici c le nom du jeu en fait", },
-            { name: "Stream status", value: "Ici c le nom du live là", }
+            { name: "Présentement en vedette", value: data[0].game_name, },
+            { name: "Titre", value: data[0].title, }
         )
         .setImage("https://static-cdn.jtvnw.net/previews-ttv/live_user_lkyuusei-1920x1080.jpg?=48974")
         .setTimestamp()

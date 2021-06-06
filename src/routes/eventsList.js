@@ -1,10 +1,9 @@
 import { getStore, getEventsList } from "../store/requests";
 
-const eventsListComponent = ({ id }) => {
+const eventsListComponent = () => {
     const eventsListRoute = "/api/twitch/events";
     const eventsListCallback = async (req, res) => {
-        const { accessToken } = getStore();
-        const response = await getEventsList(id, accessToken);
+        const response = await getEventsList();
         res.send(response);
     }
     return [eventsListRoute, eventsListCallback];

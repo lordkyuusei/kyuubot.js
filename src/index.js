@@ -1,10 +1,9 @@
 import Discord from "discord.js";
 import express from "express";
 import fs from "fs";
-import http from "http";
 import https from "https";
 
-import { getStore } from "./store/requests";
+import { getStore, setStore, getAppToken } from "./store/requests";
 import handleGuildJoin from "./components/guildArrivalComponent.js";
 import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
@@ -26,16 +25,13 @@ const app = express();
 app.use(express.json());
 
 config.meta.token = process.env.TOKEN;
-config.twitch.id = process.env.TWITCH_ID;
-config.twitch.secret = process.env.TWITCH_SECRET;
 config.twitch.redirectUri = process.env.TWITCH_REDIRECT;
-config.twitch.scope = process.env.TWITCH_SCOPE;
 config.twitch.eventCallback = process.env.TWITCH_EVENT_CB;
 
 const [authorizationRoute, authorizationCallback] = authorizationComponent(config.twitch);
-const [validationRoute, validationCallback] = validationComponent(config.twitch, handleLive, client, config.onair);
-const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent(config.twitch)
-const [eventsListRoute, eventsListCallback] = eventsListComponent(config.twitch);
+const [validationRoute, validationCallback] = validationComponent(handleLive, client, config.onair);
+const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent()
+const [eventsListRoute, eventsListCallback] = eventsListComponent();
 
 app.get("/", (req, res) => {
   const { accessToken } = getStore();
@@ -60,13 +56,31 @@ if (process.env.NODE_ENV !== 'production') {
   const cert = fs.readFileSync("./certs/server.crt", "utf-8");
 
   const credentials = { key, cert };
-  const httpServer = http.createServer(app);
   const httpsServer = https.createServer(credentials, app);
 
-  httpServer.listen(3000);
-  httpsServer.listen(443);
+  httpsServer.listen(443, async () => {
+    const { TWITCH_ID, TWITCH_SECRET, TWITCH_SCOPE } = process.env;
+    setStore("clientId", TWITCH_ID);
+    setStore("clientSecret", TWITCH_SECRET);
+    setStore("clientScope", TWITCH_SCOPE);
+
+    const response = await getAppToken();
+    const { access_token, refresh_token } = response;
+    setStore("accessToken", access_token);
+    setStore("refreshToken", refresh_token);
+  });
 } else {
-  app.listen(process.env.PORT || 3000, () => console.log("Server is running..."));
+  app.listen(process.env.PORT || 3000, async () => {
+    const { TWITCH_ID, TWITCH_SECRET, TWITCH_SCOPE } = process.env;
+    setStore("clientId", TWITCH_ID);
+    setStore("clientSecret", TWITCH_SECRET);
+    setStore("clientScope", TWITCH_SCOPE);
+
+    const response = await getAppToken();
+    const { access_token, refresh_token } = response;
+    setStore("accessToken", access_token);
+    setStore("refreshToken", refresh_token);
+  });
 }
 
 const handleMessage = (config, message) => {

@@ -1,12 +1,7 @@
 {
     "twitch": {
-        "id": "",
-        "secret": "",
         "redirectUri": "",
-        "scope": "",
-        "accessToken": "",
-        "refreshToken": "",
-        "eventCallback": "https://thekyuubot.herokuapp.com/api/twitch/event"
+        "eventCallback": ""
     },
     "meta": {
         "prefix": "!",

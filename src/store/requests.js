@@ -11,6 +11,7 @@ const store = {
     clientScope: "",
     accessToken: "",
     refreshToken: "",
+    requestsIds: [],
 };
 
 export const getStore = () => store;

@@ -1,4 +1,4 @@
-import { subscribeEvent, activeEvent, getStore, getChannelData } from "../store/requests";
+import { subscribeEvent, activeEvent, getStore, getChannelData, setStore } from "../store/requests";
 import hmacSign from "../store/hmac";
 
 export const authorizationComponent = ({ eventCallback }) => {
@@ -36,8 +36,14 @@ export const validationComponent = (handleLive, { channels }, { channel_id }) =>
             }
         } else if (subscription && event) {
             const info = await getChannelData("149976943");
-            handleLive(channels, channel_id, info);
-            res.status(200).send("ok");
+            const id = req.headers["twitch-eventsub-message-id"];
+            const { requestsIds } = getStore();
+            if (requestsIds.findIndex(id) === -1) {
+                setStore("requestsIds", [...requestsIds, id]);
+                handleLive(channels, channel_id, info);
+                res.status(200).send("ok");
+            }
+            return;
         } else {
             res.status(400).send("no");
         }

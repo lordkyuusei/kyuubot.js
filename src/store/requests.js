@@ -59,3 +59,13 @@ export const activeEvent = async (challenge, clientId, accessToken) => {
     const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(challenge)});
     return response.json();
 }
+
+export const getEventsList = async (clientId, accessToken) => {
+    const url = eventUrl;
+    const headers = {
+        "Client-ID": clientId,
+        "Authorization": `Bearer ${accessToken}`,
+    };
+    const response = await fetch(url, { method: "GET", headers });
+    return response.json();
+}

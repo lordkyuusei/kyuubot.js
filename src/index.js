@@ -4,14 +4,18 @@ import fs from "fs";
 import http from "http";
 import https from "https";
 
+import { getStore } from "./store/requests";
 import handleGuildJoin from "./components/guildArrivalComponent.js";
 import handleCommands from "./components/commandsComponent.js";
 import handleRoleReact from "./components/roleManagementComponent.js";
 import handleUpdates from "./components/updatesManagement.js";
 import handleLive from "./components/streamOnlineManagement.js";
 
+import home from "./vues/home.js";
+
 import { authorizationComponent, validationComponent} from "./routes/eventSubscribe";
 import oauthenticationComponent from './routes/oauthentication';
+import eventsListComponent from './routes/eventsList';
 
 import config from "../config.json";
 import { version } from "../package.json";
@@ -31,16 +35,25 @@ config.twitch.eventCallback = process.env.TWITCH_EVENT_CB;
 const [authorizationRoute, authorizationCallback] = authorizationComponent(config.twitch);
 const [validationRoute, validationCallback] = validationComponent(config.twitch, handleLive, client, config.onair);
 const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent(config.twitch)
+const [eventsListRoute, eventsListCallback] = eventsListComponent(config.twitch);
 
 app.get("/", (req, res) => {
-  const { accessToken } = req.query;
-  const display = accessToken ? `<h1>${accessToken}</h1><a href='/api/twitch/eventSubscribe?accessToken=${accessToken}'>event sub</a>` : "<div><a href='/api/twitch/oauth'>oauth</a></div>";
-  res.send(display);
+  const { accessToken } = getStore();
+  if (accessToken) {
+    const onair = home(accessToken, "stream.online");
+    const follow = home(accessToken, "channel.follow");
+    const subs = `<a href='/api/twitch/events'><button>get events</button></a>`
+    res.send(`<div>${onair}</div><div>${follow}</div><div>${subs}</div>`)
+  } else {
+    const homePage = home(null, "");
+    res.send(homePage);
+  }
 });
 
 app.get(authorizationRoute, authorizationCallback);
 app.post(validationRoute, validationCallback);
 app.get(oauthenticationRoute, oauthenticationCallback);
+app.get(eventsListRoute, eventsListCallback);
 
 if (process.env.NODE_ENV !== 'production') {
   const key = fs.readFileSync("./certs/server.key", "utf-8");
@@ -51,7 +64,7 @@ if (process.env.NODE_ENV !== 'production') {
   const httpsServer = https.createServer(credentials, app);
 
   httpServer.listen(3000);
-  httpsServer.listen(8443);
+  httpsServer.listen(443);
 } else {
   app.listen(process.env.PORT || 3000, () => console.log("Server is running..."));
 }

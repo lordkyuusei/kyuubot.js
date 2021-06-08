@@ -14,7 +14,7 @@ const handleLive = (channels, channel, { data }) => {
             { name: "Présentement en vedette", value: data[0].game_name, },
             { name: "Titre", value: data[0].title, }
         )
-        .setImage("https://static-cdn.jtvnw.net/previews-ttv/live_user_lkyuusei-1920x1080.jpg?=48974")
+        .setImage("https://static-cdn.jtvnw.net/previews-ttv/live_user_lkyuusei-1920x1080.jpg")
         .setTimestamp()
         .setFooter(`by Lord Kyuusei •`, messages.suc.KYUUBOT_LOGO);
 

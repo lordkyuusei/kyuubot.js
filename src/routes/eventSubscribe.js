@@ -14,20 +14,21 @@ export const authorizationComponent = ({ eventCallback }) => {
 
 const validationHmac = (req) => {
     const { clientSecret } = getStore();
-    console.log(clientSecret);
     const id = req.headers["twitch-eventsub-message-id"];
     const ts = req.headers["twitch-eventsub-message-timestamp"];
     const sn = req.headers["twitch-eventsub-message-signature"];
     const bd = JSON.stringify(req.body);
-    console.log(id, ts, sn, bd);
+    console.log(`hmac_message: ${id}${ts}${bd}`);
 
     const hmac = hmacSign(clientSecret, `${id}${ts}${bd}`);
-    console.log(hmac);
+    console.log(`signature: ${hmac}`);
     const hmac256 = `sha256=${hmac.toString(16)}`;
-    console.log(hmac256);
+    console.log(`expected signature: ${hmac256}`);
+    console.log(`should match their: ${sn}`);
     const { challenge } = req.body;
     console.log(challenge);
 
+    console.log(`it matches: ${sn === hmac256} so we return ${sn === hmac256 ? challenge : "bad request"}`);
     return sn === hmac256 ? [200, challenge] : [403, "bad request"]
 };
 

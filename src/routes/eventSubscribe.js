@@ -26,11 +26,6 @@ const validationHmac = ({ body, headers }) => {
     return sn === hmac256 ? [200, challenge] : [403, "bad request"]
 };
 
-const eventToCallback = {
-    "stream.online": streamOnlineCallback,
-    "channel.update": channelUpdateCallback,
-};
-
 const streamOnlineCallback = async (broadcaster_id, req, channels, channel_id) => {
     const info = await getStreamData(broadcaster_id);
     const id = req.headers["twitch-eventsub-message-id"];
@@ -57,18 +52,25 @@ const channelUpdateCallback = async (broadcaster_id, req, channels, channel_id) 
         }
         return false;
     }
-}
+};
+
+const eventToCallback = {
+    "stream.online": streamOnlineCallback,
+    "channel.update": channelUpdateCallback,
+};
+
 export const validationComponent = ({ channels }, { channel_id }) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = async (req, res) => {
         const { subscription, event, challenge } = req.body;
         if (challenge && subscription) {
-            console.log("received a request from twitch!");
             const [code, message] = validationHmac(req);
-            console.log(code, message);
             res.status(code).send(message);
         } else if (subscription && event) {
             const { type } = subscription;
+            console.log(type);
+            console.log(eventToCallback[type]);
+            console.log(eventToCallback["channel.update"]);
             const action = eventToCallback[type];
             if (action) {
                 const result = await action("149976943", req, channels, channel_id);

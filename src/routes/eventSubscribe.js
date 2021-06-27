@@ -12,23 +12,17 @@ export const authorizationComponent = ({ eventCallback }) => {
     return [authorizationRoute, authorizationCallback];
 }
 
-const validationHmac = (req) => {
+const validationHmac = ({ body, headers }) => {
     const { clientSecret } = getStore();
-    const id = req.headers["twitch-eventsub-message-id"];
-    const ts = req.headers["twitch-eventsub-message-timestamp"];
-    const sn = req.headers["twitch-eventsub-message-signature"];
-    const bd = JSON.stringify(req.body);
-    console.log(`hmac_message: ${id}${ts}${bd}`);
+    const id = headers["twitch-eventsub-message-id"];
+    const ts = headers["twitch-eventsub-message-timestamp"];
+    const sn = headers["twitch-eventsub-message-signature"];
+    const bd = JSON.stringify(body);
 
     const hmac = hmacSign(clientSecret, `${id}${ts}${bd}`);
-    console.log(`signature: ${hmac}`);
     const hmac256 = `sha256=${hmac.toString(16)}`;
-    console.log(`expected signature: ${hmac256}`);
-    console.log(`should match their: ${sn}`);
-    const { challenge } = req.body;
-    console.log(challenge);
+    const { challenge } = body;
 
-    console.log(`it matches: ${sn === hmac256} so we return ${sn === hmac256 ? challenge : "bad request"}`);
     return sn === hmac256 ? [200, challenge] : [403, "bad request"]
 };
 
@@ -71,7 +65,8 @@ export const validationComponent = ({ channels }, { channel_id }) => {
         if (challenge && subscription) {
             console.log("received a request from twitch!");
             const [code, message] = validationHmac(req);
-            res.status(code).send(`<pre>${JSON.stringify(message, null, 2)}</pre>`);
+            console.log(code, message);
+            res.status(code).send(message);
         } else if (subscription && event) {
             const { type } = subscription;
             const action = eventToCallback[type];

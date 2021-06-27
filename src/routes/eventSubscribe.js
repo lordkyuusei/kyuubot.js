@@ -13,12 +13,13 @@ export const authorizationComponent = ({ eventCallback }) => {
 }
 
 const validationHmac = (req) => {
+    const { clientSecret } = getStore();
     const id = req.headers["twitch-eventsub-message-id"];
     const ts = req.headers["twitch-eventsub-message-timestamp"];
     const sn = req.headers["twitch-eventsub-message-signature"];
     const bd = JSON.stringify(req.body);
 
-    const hmac = hmacSign(secret, `${id}${ts}${bd}`);
+    const hmac = hmacSign(clientSecret, `${id}${ts}${bd}`);
     const hmac256 = `sha256=${hmac.toString(16)}`;
     const { challenge } = req.body;
 
@@ -61,8 +62,6 @@ export const validationComponent = ({ channels }, { channel_id }) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = async (req, res) => {
         const { subscription, event, challenge } = req.body;
-        console.log(subscription);
-        console.log(challenge);
         if (challenge && subscription) {
             console.log("received a request from twitch!");
             const [code, message] = validationHmac(req);

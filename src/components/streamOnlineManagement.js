@@ -20,6 +20,7 @@ export const handleUpdate = (channels, channel, { data }) => {
             .setFooter(`by Lord Kyuusei •`, messages.suc.KYUUBOT_LOGO);
 
         liveChannel.send(streamOnlineEmbed);
+        console.log("done");
         return true;
     }
     return false;

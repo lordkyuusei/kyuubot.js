@@ -46,6 +46,7 @@ const channelUpdateCallback = async (broadcaster_id, req, channels, channel_id) 
     const { requestsIds } = getStore();
     if (info.data !== [] && requestsIds.findIndex(i => i === id) === -1) {
         const success = handleUpdate(channels, channel_id, info);
+        console.log("doneaaaaaaa");
         if (success) {
             setStore("requestsIds", [...requestsIds, id]);
             return true;
@@ -68,12 +69,11 @@ export const validationComponent = ({ channels }, { channel_id }) => {
             res.status(code).send(message);
         } else if (subscription && event) {
             const { type } = subscription;
-            console.log(type);
-            console.log(eventToCallback[type]);
-            console.log(eventToCallback["channel.update"]);
             const action = eventToCallback[type];
             if (action) {
                 const result = await action("149976943", req, channels, channel_id);
+                console.log("doneaa");
+
                 res.status(result ? 200 : 403, result ? "ok" : "ko");
             } else {
                 console.error(`Unrecognized: ${type} has no method.`);

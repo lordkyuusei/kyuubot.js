@@ -61,7 +61,10 @@ export const validationComponent = ({ channels }, { channel_id }) => {
     const validationRoute = "/api/twitch/event";
     const validationCallback = async (req, res) => {
         const { subscription, event, challenge } = req.body;
+        console.log(subscription);
+        console.log(challenge);
         if (challenge && subscription) {
+            console.log("received a request from twitch!");
             const [code, message] = validationHmac(req);
             res.status(code).send(message);
         } else if (subscription && event) {

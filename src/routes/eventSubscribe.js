@@ -35,8 +35,8 @@ export const validationComponent = (handleLive, { channels }, { channel_id }) =>
             const { requestsIds } = getStore();
             if (requestsIds.findIndex(i => i === id) === -1) {
                 setStore("requestsIds", [...requestsIds, id]);
-                handleLive(channels, channel_id, info);
-                res.status(200).send("ok");
+                const success = handleLive(channels, channel_id, info);
+                res.status(success ? 200 : 400).send(success ? "ok" : "ko");
             }
             return;
         } else {

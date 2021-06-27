@@ -1,6 +1,6 @@
 {
   "name": "kyuubot.js",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "My awesome Discord bot.",
   "main": "index.js",
   "repository": "https://www.github.com/lordkyuusei/kyuubot.js",

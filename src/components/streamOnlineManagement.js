@@ -1,21 +1,21 @@
 import { MessageEmbed } from "discord.js";
 import messages from '../store/messages.js';
 
-const handleLive = (channels, channel, { data }) => {
+export const handleUpdate = (channels, channel, { data }) => {
     const liveChannel = channels.cache.get(channel);
     if (liveChannel) {
         const streamOnlineEmbed = new MessageEmbed()
             .setColor('#EA2370')
-            .setTitle("Kyuu's online!")
+            .setTitle("Kyuu vient de mettre à jour ses informations de chaîne ! Un live se prépare...")
             .setURL("https://twitch.tv/lkyuusei")
             .setAuthor('El Kyuubot', messages.suc.KYUUBOT_LOGO, 'https://twitch.tv/lkyuusei')
-            .setDescription("Check out https://twitch.tv/lkyuusei now!")
+            .setDescription("Vous pouvez regarder via cette adresse : https://twitch.tv/lkyuusei !")
             .setThumbnail(messages.suc.SEKT_LOGO)
             .addFields(
-                { name: "Présentement en vedette", value: data[0].game_name, },
+                { name: "Prochain jeu", value: data[0].game_name, },
                 { name: "Titre", value: data[0].title, }
             )
-            .setImage("https://static-cdn.jtvnw.net/previews-ttv/live_user_lkyuusei-1920x1080.jpg")
+            .setImage(data[0].thumbnail_url)
             .setTimestamp()
             .setFooter(`by Lord Kyuusei •`, messages.suc.KYUUBOT_LOGO);
 
@@ -23,6 +23,28 @@ const handleLive = (channels, channel, { data }) => {
         return true;
     }
     return false;
-}
+};
 
-export default handleLive;
+export const handleLive = (channels, channel, { data }) => {
+    const liveChannel = channels.cache.get(channel);
+    if (liveChannel) {
+        const streamOnlineEmbed = new MessageEmbed()
+            .setColor('#EA2370')
+            .setTitle("Kyuu vient de démarrer un live !")
+            .setURL("https://twitch.tv/lkyuusei")
+            .setAuthor('El Kyuubot', messages.suc.KYUUBOT_LOGO, 'https://twitch.tv/lkyuusei')
+            .setDescription("Vous pouvez regarder via cette adresse : https://twitch.tv/lkyuusei !")
+            .setThumbnail(messages.suc.SEKT_LOGO)
+            .addFields(
+                { name: "Présentement en vedette", value: data[0].game_name, },
+                { name: "Titre", value: data[0].title, }
+            )
+            .setImage(data[0].thumbnail_url)
+            .setTimestamp()
+            .setFooter(`by Lord Kyuusei •`, messages.suc.KYUUBOT_LOGO);
+
+        liveChannel.send(streamOnlineEmbed);
+        return true;
+    }
+    return false;
+};

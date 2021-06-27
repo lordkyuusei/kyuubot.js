@@ -19,27 +19,27 @@ export const setStore = (prop, value) => store[prop] = value;
 
 export const authorize = (clientId, clientRedirect, clientScope) => {
     return `${baseUrl}oauth2/authorize?client_id=${clientId}&redirect_uri=${clientRedirect}&response_type=code&scope=${clientScope}`;
-}
+};
 
 export const getAccessToken = async (clientId, clientSecret, code, clientRedirect) => {
     const url = `${baseUrl}oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code&redirect_uri=${clientRedirect}`;
     const response = await fetch(url, { method: "POST" });
     return await response.json();
-}
+};
 
 export const getAppToken = async () => {
     const { clientId, clientSecret, clientScope } = getStore();
     const url = `${baseUrl}oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials&scope=${clientScope}`;
     const response = await fetch(url, { method: "POST" });
     return await response.json();
-}
+};
 
 export const refreshAppToken = async () => {
     const { clientId, clientSecret, refreshToken } = getStore();
     const url = `${baseUrl}oauth2/token?grant_type=refresh_token&refresh_token=${refreshToken}&client_id=${clientId}&client_secret=${clientSecret}`;
     const response = await fetch(url, { method: "POST" });
     return await response.json();
-}
+};
 
 export const subscribeEvent = async (eventType, callback) => {
     const { clientId, clientSecret, accessToken } = getStore();
@@ -55,7 +55,7 @@ export const subscribeEvent = async (eventType, callback) => {
     body.transport.secret = clientSecret;
     const response = await myFetch(url, "POST", headers, JSON.stringify(body));
     return await response.json();
-}
+};
 
 export const activeEvent = async (challenge) => {
     const { clientId, accessToken } = getStore();
@@ -67,7 +67,7 @@ export const activeEvent = async (challenge) => {
     };
     const response = await await myFetch(url, "POST", headers, JSON.stringify(challenge));
     return response.json();
-}
+};
 
 export const getEventsList = async () => {
     const { clientId, accessToken } = getStore();
@@ -78,7 +78,7 @@ export const getEventsList = async () => {
     };
     const response = await myFetch(url, "GET", headers);
     return response.json();
-}
+};
 
 export const getChannelData = async (broadcaster_id) => {
     const { clientId, accessToken } = getStore();
@@ -89,7 +89,18 @@ export const getChannelData = async (broadcaster_id) => {
     };
     const response = await myFetch(url, "GET", headers);
     return response.json();
-}
+};
+
+export const getStreamData = async (broadcaster_id) => {
+    const { clientId, accessToken } = getStore();
+    const url = `${helixUrl}streams?user_id=${broadcaster_id}`;
+    const headers = {
+        "Client-ID": clientId,
+        "Authorization": `Bearer ${accessToken}`
+    };
+    const response = await myFetch(url, "GET", headers);
+    return response.json();
+};
 
 export const myFetch = async (url, method, headers, body) => {
     let response = await fetch(url, { method, headers, body });
@@ -101,4 +112,4 @@ export const myFetch = async (url, method, headers, body) => {
         response = await fetch(url, { method, headers, body});
     }
     return response;
-}
+};

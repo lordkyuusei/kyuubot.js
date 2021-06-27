@@ -7,9 +7,8 @@ import home from "../vues/home.js";
 import { getStore, setStore, getAppToken } from "../store/requests";
 
 import eventsListComponent from '../routes/eventsList';
-import handleLive from "../components/streamOnlineManagement.js";
 import oauthenticationComponent from '../routes/oauthentication';
-import { authorizationComponent, validationComponent } from "../routes/eventSubscribe";
+import { authorizationComponent, validationComponent, validationUpdateChannelComponent } from "../routes/eventSubscribe";
 
 const setupStore = async (isDebugMode) => {
     const { TWITCH_ID, TWITCH_SECRET, TWITCH_SCOPE } = process.env;
@@ -30,7 +29,7 @@ const setupTwitchService = async (config, client) => {
     const [eventsListRoute, eventsListCallback] = eventsListComponent();
     const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent();
     const [authorizationRoute, authorizationCallback] = authorizationComponent(config.twitch);
-    const [validationRoute, validationCallback] = validationComponent(handleLive, client, config.onair);
+    const [validationRoute, validationCallback] = validationComponent(client, config.onair);
 
     const app = express();
     app.use(express.json());
@@ -39,19 +38,20 @@ const setupTwitchService = async (config, client) => {
         const { accessToken } = getStore();
         if (accessToken) {
             const onair = home(accessToken, "stream.online");
+            const update = home(accessToken, "channel.update");
             const follow = home(accessToken, "channel.follow");
             const subs = `<a href='/api/twitch/events'><button>get events</button></a>`
-            res.send(`<div>${onair}</div><div>${follow}</div><div>${subs}</div>`)
+            res.send(`<div>${onair}</div><div>${update}</div><div>${follow}</div><div>${subs}</div>`)
         } else {
             const homePage = home(null, "");
             res.send(homePage);
         }
     });
 
-    app.get(authorizationRoute, authorizationCallback);
-    app.post(validationRoute, validationCallback);
-    app.get(oauthenticationRoute, oauthenticationCallback);
     app.get(eventsListRoute, eventsListCallback);
+    app.post(validationRoute, validationCallback);
+    app.get(authorizationRoute, authorizationCallback);
+    app.get(oauthenticationRoute, oauthenticationCallback);
 
     if (process.env.NODE_ENV !== 'production') {
         const key = fs.readFileSync("./certs/server.key", "utf-8");

@@ -21,7 +21,7 @@ const setupDiscordClient = (config) => {
     client.once('ready', () => handleUpdates(client, config, version));
 
     client.on('message', async message => handleMessage(config, message));
-    client.on('guildMemberAdd', member => handleGuildJoin(config, member));
+    client.on('guildMemberAdd', member => handleGuildJoin(config, member, client));
     client.on('messageReactionAdd', (reaction, user) => handleRoleReact(config, reaction, user, true));
     client.on('messageReactionRemove', (reaction, user) => handleRoleReact(config, reaction, user, false));
 

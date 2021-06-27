@@ -33,6 +33,10 @@
         "channel_id": "858730382299103232",
         "channel_name": "📢-annonces-discord"
     },
+    "arrival": {
+        "channel_id": "858732189138026546",
+        "channel_name": "🎊-arrivées"
+    },
     "reactionsToRoleMap": [
         {
             "emoji": "📱",

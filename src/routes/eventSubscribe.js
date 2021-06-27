@@ -7,7 +7,7 @@ export const authorizationComponent = ({ eventCallback }) => {
     const authorizationCallback = async (req, res) => {
         const { event } = req.query;
         const response = await subscribeEvent(event, eventCallback);
-        res.send(response);
+        res.send(`<pre>${JSON.stringify(response, null, 2)}</pre>`);
     }
     return [authorizationRoute, authorizationCallback];
 }
@@ -66,7 +66,7 @@ export const validationComponent = ({ channels }, { channel_id }) => {
         if (challenge && subscription) {
             console.log("received a request from twitch!");
             const [code, message] = validationHmac(req);
-            res.status(code).send(message);
+            res.status(code).send(`<pre>${JSON.stringify(message, null, 2)}</pre>`);
         } else if (subscription && event) {
             const { type } = subscription;
             const action = eventToCallback[type];

@@ -26,7 +26,7 @@ const setupStore = async (isDebugMode) => {
 };
 
 const setupTwitchService = async (config, client) => {
-    const output = process.env === "production" ? config.onair : config.playground;
+    const output = process.env !== "production" ? config.playground : config.onair;
 
     const [eventsListRoute, eventsListCallback] = eventsListComponent();
     const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent();

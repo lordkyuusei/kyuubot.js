@@ -37,6 +37,10 @@
         "channel_id": "858732189138026546",
         "channel_name": "🎊-arrivées"
     },
+    "playground":  {
+        "channel_id": "863404782874263592",
+        "channel_name": "🐛-kyuubot-playground"
+    },
     "reactionsToRoleMap": [
         {
             "emoji": "📱",

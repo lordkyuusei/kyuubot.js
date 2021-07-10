@@ -26,10 +26,12 @@ const setupStore = async (isDebugMode) => {
 };
 
 const setupTwitchService = async (config, client) => {
+    const output = process.env === "production" ? config.onair : config.playground;
+
     const [eventsListRoute, eventsListCallback] = eventsListComponent();
     const [oauthenticationRoute, oauthenticationCallback] = oauthenticationComponent();
     const [authorizationRoute, authorizationCallback] = authorizationComponent(config.twitch);
-    const [validationRoute, validationCallback] = validationComponent(client, config.onair);
+    const [validationRoute, validationCallback] = validationComponent(client, output);
 
     const app = express();
     app.use(express.json());

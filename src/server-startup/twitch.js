@@ -60,7 +60,7 @@ const setupTwitchService = async (config, client) => {
         const credentials = { key, cert };
 
         const httpsServer = https.createServer(credentials, app);
-        httpsServer.listen(443, async () => await setupStore(true));
+        httpsServer.listen(4343, async () => await setupStore(true));
     } else {
         app.listen(process.env.PORT || 3000, async () => await setupStore(false));
     }

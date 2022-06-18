@@ -1,11 +1,4 @@
-import { playMusicSafeguard, stopMusicSafeguard } from './commands/musicCommands';
-import startSurveySafeguard from './commands/surveyCommands';
-
-const methodsToExecute = {
-    "amb": playMusicSafeguard,
-    "stop": stopMusicSafeguard,
-    "survey": startSurveySafeguard
-};
+const methodsToExecute = {};
 
 const handleCommands = (command, message) => {
     const action = methodsToExecute[command.name];
